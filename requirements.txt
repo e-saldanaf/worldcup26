@@ -1,0 +1,6 @@
+requests>=2.31
+pydantic-settings>=2.0
+python-dotenv>=1.0
+SQLAlchemy>=2.0
+sqlalchemy-cockroachdb>=2.0
+psycopg[binary]>=3.1
