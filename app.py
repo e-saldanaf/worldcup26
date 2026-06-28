@@ -248,6 +248,26 @@ def get_data():
 
 df, standings, teams, bracket = get_data()
 
+if show_es:
+    tz_name = "Europe/Madrid"
+    tz_label = "CEST"
+else:
+    tz_name = "UTC"
+    tz_label = "UTC"
+
+last_refresh = pd.Timestamp.now(tz=tz_name)
+
+with st.sidebar:
+    st.markdown("---")
+    st.markdown(
+        f'<p style="color:#666;font-size:0.75rem;">'
+        f"Última actualización: {last_refresh.strftime('%d %b, %H:%M')} {tz_label}"
+        f"</p>",
+        unsafe_allow_html=True,
+    )
+    if st.button("Actualizar ahora", use_container_width=True):
+        st.cache_data.clear()
+        st.rerun()
 
 # ────────────────────────────────────────────── POSICIONES ────────────────────
 
