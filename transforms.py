@@ -12,22 +12,22 @@ _COLS = [
 ]
 
 R32 = [
-    ("73",  "2026-06-28", "South Africa",       "Canada"),
-    ("74",  "2026-06-29", "Germany",            "Paraguay"),
-    ("75",  "2026-06-29", "Netherlands",        "Morocco"),
-    ("76",  "2026-06-29", "Brazil",             "Japan"),
-    ("77",  "2026-06-30", "France",             "Sweden"),
-    ("78",  "2026-06-30", "Ivory Coast",        "Norway"),
-    ("79",  "2026-06-30", "Mexico",             "Ecuador"),
-    ("80",  "2026-07-01", "England",            "Congo DR"),
-    ("81",  "2026-07-01", "Belgium",            "Senegal"),
-    ("82",  "2026-07-01", "United States",      "Bosnia-Herzegovina"),
-    ("83",  "2026-07-02", "Spain",              "Austria"),
-    ("84",  "2026-07-02", "Portugal",           "Croatia"),
-    ("85",  "2026-07-02", "Switzerland",        "Algeria"),
-    ("86",  "2026-07-03", "Australia",          "Egypt"),
-    ("87",  "2026-07-03", "Argentina",          "Cape Verde Islands"),
-    ("88",  "2026-07-03", "Colombia",           "Ghana"),
+    ("73",  "2026-06-28T19:00", "South Africa",       "Canada",              "SoFi Stadium"),
+    ("74",  "2026-06-29T20:30", "Germany",            "Paraguay",            "Gillette Stadium"),
+    ("75",  "2026-06-30T01:00", "Netherlands",        "Morocco",             "Estadio BBVA"),
+    ("76",  "2026-06-29T17:00", "Brazil",             "Japan",               "NRG Stadium"),
+    ("77",  "2026-06-30T21:00", "France",             "Sweden",              "MetLife Stadium"),
+    ("78",  "2026-06-30T17:00", "Ivory Coast",        "Norway",              "AT&T Stadium"),
+    ("79",  "2026-07-01T01:00", "Mexico",             "Ecuador",             "Estadio Azteca"),
+    ("80",  "2026-07-01T16:00", "England",            "Congo DR",            "Mercedes-Benz Stadium"),
+    ("81",  "2026-07-01T20:00", "Belgium",            "Senegal",             "Lumen Field"),
+    ("82",  "2026-07-02T00:00", "United States",      "Bosnia-Herzegovina",  "Levi's Stadium"),
+    ("83",  "2026-07-02T19:00", "Spain",              "Austria",             "SoFi Stadium"),
+    ("84",  "2026-07-02T23:00", "Portugal",           "Croatia",             "BMO Field"),
+    ("85",  "2026-07-03T03:00", "Switzerland",        "Algeria",             "BC Place"),
+    ("86",  "2026-07-03T18:00", "Australia",          "Egypt",               "AT&T Stadium"),
+    ("87",  "2026-07-03T22:00", "Argentina",          "Cape Verde Islands",  "Hard Rock Stadium"),
+    ("88",  "2026-07-04T01:30", "Colombia",           "Ghana",               "Arrowhead Stadium"),
 ]
 
 R16 = [
@@ -181,7 +181,8 @@ def knockout_bracket(df: pd.DataFrame) -> pd.DataFrame:
     played = df[df["round"] != "GROUP_STAGE"]
     rows: list[dict] = []
 
-    def add_match(num: str, date: str, home: str, away: str, rnd: str, src: str = ""):
+    def add_match(num: str, date: str, home: str, away: str, rnd: str,
+                  venue: str = "", src: str = ""):
         result = _lookup(played, home, away) if home and away else None
         rows.append({
             "round": rnd,
@@ -189,14 +190,15 @@ def knockout_bracket(df: pd.DataFrame) -> pd.DataFrame:
             "date": date,
             "home_team": home,
             "away_team": away,
+            "venue": venue,
             "home_goals": result["home_goals"] if result else None,
             "away_goals": result["away_goals"] if result else None,
             "status": result["status"] if result else "SCHEDULED",
             "src": src,
         })
 
-    for num, date, home, away in R32:
-        add_match(num, date, home, away, "Round of 32")
+    for num, date, home, away, venue in R32:
+        add_match(num, date, home, away, "Round of 32", venue)
 
     def resolve(num: str) -> str:
         w = _winner_of(played, num)
